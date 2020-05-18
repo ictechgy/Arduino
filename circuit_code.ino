@@ -19,7 +19,6 @@ void first();
 void second();
 void third();
 void fourth();		//각각의 루틴에 대한 함수
-void cleanUp();		//루틴이 끝난 뒤 정리하는 함수
 //함수 선언
 
 void setup()
@@ -46,6 +45,9 @@ void loop()
   if(digitalRead(sw)!=HIGH){	//스위치가 눌렸다면
     cnt++;	//cnt의 값을 증가시킨다.
     flag = 0;	//해당 cnt에 대한 루틴은 작동시키지 않은 상태로 세팅
+    delay(250);	
+    //버튼을 누른 순간 cnt가 급격하게 빨리 올라가지 않도록 조정해주는 delay값
+    //(3번루틴이 스킵되고 4번으로 바로 넘어가는 경우가 종종 발생)
   }
   
   if(flag == 0){	//해당 cnt에 대한 루틴을 진행하지 않은 경우
@@ -65,7 +67,6 @@ void loop()
           break;
     }
     flag = 1;	//하나의 루틴을 작동하였으므로 flag를 1로 전환
-    cleanUp();	//켜져 있는 LED들은 끈다.(기존 루틴 흔적 제거)
   }
 }
 
@@ -85,6 +86,7 @@ void first(){
    	digitalWrite(LED_A, LOW); 
   }
   delay(3000);
+  digitalWrite(LED_A, LOW);	//루틴 종료 후 꺼주기
 }
 
 void second(){
@@ -113,16 +115,10 @@ void third(){
   }else{
     digitalWrite(LED_C, LOW);
   }
-  delay(3000);	//LED확인을 위한 임의 delay
 }
 
 void fourth(){
   cnt = 0;	//푸시버튼 카운터 초기화
+  digitalWrite(LED_C, LOW); //네번째 루틴을 실행할 때는 켜져있을지 모르는 LED_C 꺼준다. 
   delay(5000);
-}
-
-void cleanUp(){
-	for(int i = LED_C; i<=LED_A; i++){
-    digitalWrite(i, LOW); //모든 LED 초기화(끄기)
-  }  
 }
