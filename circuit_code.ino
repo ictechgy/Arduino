@@ -1,6 +1,4 @@
 int cnt;	//스위치가 눌린 횟수를 저장
-int flag;	
-//하나의 루틴을 한번 작동시키면 스위치 값 변동 없을 시 다시 반복되지 않도록 하기 위한 판단변수
 
 int resistPin = A0;	//가변저항값을 읽을 Pin번호
 int photoPin = A1; //조도센서 저항값을 읽을 Pin번호
@@ -24,9 +22,6 @@ void fourth();		//각각의 루틴에 대한 함수
 void setup()
 {
   cnt = 0;
-  flag = 1;//값의 초기화
-  //flag의 경우 0이면 루틴을 실행하지 않은 상태, 1이면 실행한 상태
-  //초기상태에는 loop내에서 스위치의 변동만을 확인하게 하기위해 1로 세팅
   
   pinMode(resistPin, INPUT);	//A0
   pinMode(photoPin, INPUT);		//A1
@@ -44,14 +39,10 @@ void loop()
 {
   if(digitalRead(sw)!=HIGH){	//스위치가 눌렸다면
     cnt++;	//cnt의 값을 증가시킨다.
-    flag = 0;	//해당 cnt에 대한 루틴은 작동시키지 않은 상태로 세팅
-    delay(250);	
+    delay(270);	
     //버튼을 누른 순간 cnt가 급격하게 빨리 올라가지 않도록 조정해주는 delay값
     //(3번루틴이 스킵되고 4번으로 바로 넘어가는 경우가 종종 발생)
-  }
-  
-  if(flag == 0){	//해당 cnt에 대한 루틴을 진행하지 않은 경우
-		
+    
     switch(cnt){	//스위치가 눌린 횟수 각각의 경우에 대하여 각각의 함수 작동
       case 1:
           first();
@@ -65,10 +56,10 @@ void loop()
       case 4:
           fourth();
           break;
-    }
-    flag = 1;	//하나의 루틴을 작동하였으므로 flag를 1로 전환
-  }
-}
+    }//end switch
+  }//endif
+  
+}//endloop
 
 //함수 정의
 int getResist(int pinNum){
